@@ -37,7 +37,7 @@ const createOrder = (newOrder) => {
                         
                     })
                     if (createdOrder) {
-                        // await EmailService.sendEmailCreateOrder(email,orderItems)
+                        await EmailService.sendEmailCreateOrder(email,orderItems)
                         return {
                             status: 'OK',
                             message: 'success'

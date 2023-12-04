@@ -41,7 +41,7 @@ const sendEmailCreateOrder = async (email, orderItems) => {
     });
 
     let info = await transporter.sendMail({
-        from: process.env.MAIL_ACCOUNT,
+        from: `"WebPhone" <${process.env.MAIL_ACCOUNT}>`,
         to: email,
         subject: "Đặt Hàng Thành Công - Shop WebPhone",
         html: `

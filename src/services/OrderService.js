@@ -1,11 +1,11 @@
 
-const Order = require("../models/OrderProduct")
+const Order = require("../models/OrderModel")
 const Product = require("../models/ProductModel")
 const EmailService = require("../services/EmailService")
 
 const createOrder = (newOrder) => {
     return new Promise(async (resolve, reject) => {
-        const { orderItems,paymentMethod, itemsPrice, shippingPrice, totalPrice, fullName, address, city, phone,user, isPaid, paidAt, email } = newOrder
+        const { orderItems,paymentMethod, itemsPrice, shippingPrice, totalPrice, fullName, address, city, phone, user, isPaid, paidAt, email } = newOrder
         try {
             const promises = orderItems.map(async (order) => {
                 const productData = await Product.findOneAndUpdate(
@@ -20,30 +20,10 @@ const createOrder = (newOrder) => {
                     {new: true}
                 )
                 if(productData) {
-                    
-                    const createdOrder = await Order.create({
-                        orderItems,
-                        shippingAddress: {
-                            fullName,
-                            address,
-                            city, phone
-                        },
-                        paymentMethod,
-                        itemsPrice,
-                        shippingPrice,
-                        totalPrice,
-                        user: user,
-                        isPaid, paidAt
-                        
-                    })
-                    if (createdOrder) {
-                        // await EmailService.sendEmailCreateOrder(email,orderItems)
-                        return {
-                            status: 'OK',
-                            message: 'success'
-                        }
-                    }
-                           
+                    return{
+                        status: 'OK',
+                        message: 'Success'
+                    }      
                 }else {
                     return{
                         status: 'OK',
@@ -63,11 +43,31 @@ const createOrder = (newOrder) => {
                     status: 'ERR',
                     message: `San pham voi id: ${arrId.join(',')} khong du hang`
                 })
-            } 
-            resolve({
-                status: 'OK',
-                message: 'success'
-            })    
+            }else {
+                const createdOrder = await Order.create({
+                    orderItems,
+                    shippingAddress: {
+                        fullName,
+                        address,
+                        city,
+                        phone
+                    },
+                    paymentMethod,
+                    itemsPrice,
+                    shippingPrice,
+                    totalPrice,
+                    user,
+                    isPaid,
+                    paidAt, 
+                })
+                if (createdOrder) {
+                    await EmailService.sendEmailCreateOrder(email,orderItems)
+                    resolve({
+                        status: 'OK',
+                        message: 'Success'
+                    })
+                }
+            }     
         } catch (e) {
             reject(e)
         }

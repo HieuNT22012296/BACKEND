@@ -103,26 +103,25 @@ const getAllOrderDetails = (id) => {
     })
 }
 
-const getDetailsOrder = (id) => {
+const getDetailsOrder = (orderId) => {
     
     return new Promise( async(resolve, reject) => {
-        
         try {
-            const order = await Order.findById({
-                _id: id
+
+            const orders = await Order.findById({
+                _id: orderId
             })
 
-            if(order === null) {
+            if(orders === null) {
                 resolve({
                     status: 'OK',
                     message: 'The order is not defined'
                 })
             }
-
             resolve({
                 status: 'OK',
                 message: 'Success',
-                data: order
+                data: orders
              
             })
           
@@ -132,8 +131,7 @@ const getDetailsOrder = (id) => {
     })
 }
 
-const cancelOrderDetails = (id, data) => {
-    
+const cancelOrderDetails = (idOrder, data) => {
     return new Promise( async(resolve, reject) => {
         
         try {
@@ -151,7 +149,7 @@ const cancelOrderDetails = (id, data) => {
                     {new: true}
                 )
                 if(productData) {
-                    order = await Order.findByIdAndDelete(id)
+                    order = await Order.findByIdAndDelete(idOrder)
                     if (order === null) {
                         resolve({
                             status: 'ERR',
@@ -162,7 +160,7 @@ const cancelOrderDetails = (id, data) => {
                     return{
                         status: 'OK',
                         message: 'ERR',
-                        id: order.product
+                        idOrder: order.product
                     }
                 }
             })
@@ -177,8 +175,8 @@ const cancelOrderDetails = (id, data) => {
             }
             resolve({
                 status: 'OK',
-                message: 'success',
-                data: order
+                message: 'Success',
+                data: data
             })
         } catch (e) {
             reject(e)

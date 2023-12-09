@@ -5,11 +5,26 @@ const routes = require("./routes");
 const cors = require('cors');
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
+const passport = require('passport')
+const cookieSession = require('cookie-session')
+const passportSetup = require('./passport')
+const authRoute = require('./routes/auth')
 
 dotenv.config()
 
 const app = express()
 const port = process.env.PORT || 3001
+
+app.use(
+    cookieSession({
+        name: "session",
+        keys: ["webphone"],
+        maxAge: 24 * 60 * 60 * 100
+    })
+)
+app.use(passport.initialize())
+app.use(passport.session())
+app.use('/auth', authRoute)
 
 app.use(cors())
 app.use(bodyParser.json({limit: '50mb'}));

@@ -6,26 +6,41 @@ const cors = require('cors');
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const passport = require('passport')
-const cookieSession = require('cookie-session')
+// const cookieSession = require('cookie-session')
+const session = require("express-session");
 const passportSetup = require('./passport')
-const authRoute = require('./routes/auth')
 
 dotenv.config()
 
 const app = express()
 const port = process.env.PORT || 3001
 
+// app.use(
+//     cookieSession({
+//         name: "session",
+//         keys: ["webphone"],
+//         maxAge: 24 * 60 * 60 * 100000
+//     })
+// )
+
 app.use(
-    cookieSession({
-        name: "session",
-        keys: ["webphone"],
-        maxAge: 24 * 60 * 60 * 100
+    session({
+      secret: "webphone", // Khóa bí mật để ký và mã hóa session ID
+      resave: false,
+      saveUninitialized: true,
     })
-)
+  );
 app.use(passport.initialize())
 app.use(passport.session())
-app.use('/auth', authRoute)
 
+app.use(
+	cors({
+		// origin: "http://localhost:3000",
+        origin: "https://webphone-kappa.vercel.app/",
+		methods: "GET,POST,PUT,DELETE",
+		credentials: true,
+	})
+);
 app.use(cors())
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));

@@ -25,7 +25,7 @@ const port = process.env.PORT || 3001
 
 app.use(
     session({
-      secret: "webphone", // Khóa bí mật để ký và mã hóa session ID
+      secret: "webphone", 
       resave: false,
       saveUninitialized: true,
     })

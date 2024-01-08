@@ -3,7 +3,6 @@ const JwtService = require('../services/JwtService')
 
 const createUser = async (req, res) => {
     try {
-        // console.log(req.body)
         const { name, email, password, confirmPassword, phone } = req.body
         const reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/
         const isCheckEmail = reg.test(email)
@@ -23,7 +22,6 @@ const createUser = async (req, res) => {
                 message: " The password is equal confirmPassword"
             })
         }
-        // console.log('isCheckEmail', isCheckEmail)
         const response = await UserService.createUser(req.body)
         return res.status(200).json(response)
     } catch (e) {
@@ -64,6 +62,7 @@ const loginUser = async (req, res) => {
         })
     }
 }
+
 const updateUser = async (req, res) => {
     try {
         const userId = req.params.id
